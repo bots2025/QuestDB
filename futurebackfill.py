@@ -46,7 +46,7 @@ def ingest_batch(sender, rows, symbol):
 import json
 import os
 
-PROGRESS_FILE = "progress.json"
+PROGRESS_FILE = "future_progress.json"
 
 
 def load_progress():
