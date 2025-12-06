@@ -5,6 +5,7 @@ import os
 from utils import future_fetch_klines, get_futures_symbols
 from questdb.ingress import Sender, TimestampNanos
 import requests
+import pytz
 
 QUEST_HOST = "82.29.166.107"
 QUEST_PORT = 9000
@@ -12,9 +13,14 @@ conf = f"http::addr={QUEST_HOST}:{QUEST_PORT};"
 
 INTERVAL = "1m"
 
+timezone = pytz.timezone("Etc/UTC")
+# create 'datetime' objects in UTC time zone to avoid the implementation of a local time zone offset
+utc_from = datetime.datetime(2023, 1, 1, tzinfo=timezone)
+utc_to = datetime.datetime(2024, 12, 31, 23, 59, 59, tzinfo=timezone)
+
 # Date boundaries
-DATE_FROM = int(datetime.datetime(2023, 1, 1).timestamp() * 1000)
-DATE_TO   = int(datetime.datetime(2024, 12, 31, 23, 59, 59).timestamp() * 1000)
+DATE_FROM = int(utc_from.timestamp() * 1000)
+DATE_TO   = int(utc_to.timestamp() * 1000)
 
 PROGRESS_FILE = "future_progress.json"
 BATCH_LIMIT = 500       # smaller batch to reduce risk of 429
@@ -27,7 +33,7 @@ def ingest_batch(sender, rows, symbol):
             continue
 
         sender.row(
-            "futures_klines",
+            "futures_klines_v1",
             symbols={
                 "symbol": symbol,
                 "interval": INTERVAL
