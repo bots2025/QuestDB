@@ -4,6 +4,5 @@ binance_klines\futurestream.py
 binance_klines\main.py
 binance_klines\spotbackfill.py
 binance_klines\spotstream.py
-binance_klines\utils.py
 future_progress.json
 dhan_pipeline
